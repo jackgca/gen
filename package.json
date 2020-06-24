@@ -4,14 +4,12 @@
   "description": "",
   "main": "main.js",
   "dependencies": {
-    "canvas-sketch": "^0.7.3",
-    "canvas-sketch-util": "^1.10.0",
     "electron": "^9.0.5",
-    "p5": "^1.0.0"
+    "p5": "^1.0.0",
+    "paper": "^0.12.11"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron ."
   },
   "author": "Jack Graham",
