@@ -27,9 +27,11 @@ window.onload = function() {
             saveSVG(project.activeLayer.exportSVG({"asString": true}), function() {
                 console.log("svg saved");
             });
-        }
+       }
+       if (event.key == "r") {
+           window.location.reload(false);
+       }
     }
-    
 
     require('../sketches/faces.js').run();
 }

@@ -33,7 +33,7 @@ function createWindow() {
 	    mainWindow.on('move', function () {
 	        var windowBounds = mainWindow.getBounds();
 	        devtools.setPosition(windowBounds.x + windowBounds.width, windowBounds.y);
-	    });
+		});
 	}
 
 	openDevTools();
