@@ -7,6 +7,10 @@ const math = create(all, mathConfig);
 
 mjsFuncs.forEach(f => {window[f] = math[f]});
 
+/* - setup perlin.js - */
+
+noise.seed(1) // 1 - 65536
+
 
 /* - setup paper.js */
 

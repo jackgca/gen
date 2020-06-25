@@ -1,9 +1,10 @@
-noise.seed(1) // 1 - 65536
+let g = {};
 
 class Eye {
-    constructor(x, y) {
+    constructor(x, y, side) {
         this.x = x;
         this.y = y;
+        this.side = side;
         this.left;
         this.right;
         return this.generateEye();
@@ -27,8 +28,8 @@ class Eye {
         let pupilSize = random(0.2, 0.35) * eyeOutline.strokeBounds.width;
         let pupil = new Path.Ellipse({
             center: [
-                ((rightSide.x + leftSide.x) / 2) + random(-3, 3),
-                ((rightSide.y + leftSide.y) / 2) + random(-3, 3)
+                ((rightSide.x + leftSide.x) / 2) + random(-2, 2),
+                ((rightSide.y + leftSide.y) / 2) + random(-2, 2)
             ],
             radius: [pupilSize / 2, (eyeOutline.strokeBounds.height / 2) + random(0, 2)]
         });
@@ -40,7 +41,8 @@ class Eye {
             children: [
                 eyeOutline,
                 pupil
-            ]
+            ],
+            name: this.side
         });
 
         // todo: keep track of eye corners after rotation
@@ -63,7 +65,9 @@ class Nose {
     }
 
     generateNose(numLines) {
-        let nose = new Group();
+        let nose = new Group({
+            name: 'nose'
+        });
     
         let noseLine = function(n, sf, rv, nx) {
             let noseLength = n.faceHeight * sf * 4;
@@ -73,16 +77,28 @@ class Nose {
                 segments: [
                     new Segment([n.x, n.y], null, [0 + noiseVal, (noseLength / 2) - noiseVal]), // first point and first handle
                     new Segment([n.x + (n.faceHeight * sideFactor), n.y + noseLength], [(n.faceHeight * sideFactor) - noiseVal, 0 + noiseVal]), // curved line and second handle
-                    new Segment([n.x + (sideFactor * rv), n.y + noseLength - rv]) // bottom line
+                    new Segment([n.x + (sideFactor * rv), n.y + noseLength - rv]), // bottom line
+                    new Segment([n.x, n.y + n.faceHeight]) // vertical line
                 ],
                 strokeColor: 'black',
                 fillColor: 'white'
             });
+            g.noseLine = [
+                [
+                    n.x + (sideFactor * rv),
+                    n.y + noseLength - rv
+                ],
+                [
+                    n.x,
+                    n.y + n.faceHeight
+                ]
+            ];
             nose.addChild(line)
         }
 
         let v = random(1, 4);
-        let s = random(0.05, 0.2);
+        let s = random(0.075, 0.2);
+
         for (var i = 0; i < numLines; i++) {
             noseLine(this, s, v, i);
         }
@@ -112,13 +128,13 @@ class Head {
             let lerp = l / np * (i + 1);
             let p = temp.getPointAt(lerp < l ? lerp : l);
             points.push(new Point(
-                p.x + random(-2, 2),
-                p.y + random(-2, 2)
+                p.x + (random(-2, 2) * 2),
+                p.y + (random(-2, 2) * 2)
             ));
         }
         
         let pointsPop = function(pts) {
-            if (random() < 0.5 && pts.length > 5) {
+            if (random() < 0.7 && pts.length > 5) {
                 pts.pop(math.randomInt(0, pts.length))
                 return pts;
             }
@@ -130,7 +146,8 @@ class Head {
         let head = new Path({
             segments: points,
             strokeColor: 'black',
-            closed: true
+            closed: true,
+            name: 'head'
         });
         head.smooth();
 
@@ -157,8 +174,8 @@ class Face {
         // create eyes
         (function(t) {
             let space = random(t.height/8, t.height/4);
-            face.addChild(new Eye(t.x - space, t.y - (t.height / random(3, 5)))); // left eye
-            face.addChild(new Eye(t.x + space, t.y - (t.height / random(3, 5)))); // right eye
+            face.addChild(new Eye(t.x - space, t.y - (t.height / random(3, 5)), 'left')); // left eye
+            face.addChild(new Eye(t.x + space, t.y - (t.height / random(3, 5)), 'right')); // right eye
         })(this);
 
         // create nose
@@ -167,7 +184,43 @@ class Face {
             face.addChild(new Nose(t.x, t.y - (t.height / 2), t.height, noseSide));
         })(this);
 
+        // create mouth
+        (function(t) {
+            let noseLine = new Path({segments: g.noseLine});
+            let start = noseLine.getPointAt(noseLine.length / 2);
+            face.addChild(new Mouth(start.x, start.y));
+        })(this);
+            //console.log(face);
         return face;
+    }
+}
+
+class Mouth {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        return this.generateMouth();
+    }
+
+    generateMouth() {
+        let mouth = new Group();
+        let noseLine = new Path({
+            segments: g.noseLine
+        });
+        let midPoint = noseLine.getPointAt(noseLine.length / 2);
+        let topMouth = new Path({
+            segments: midPoint,
+            strokeColor: 'black'
+        });
+        let fac = random(-5, 5);
+        console.log(midPoint.x, midPoint.y);
+        console.log(fac);
+        topMouth.arcTo(
+            [midPoint.x + fac, midPoint.y + fac],
+            [midPoint.x + (2 * fac), midPoint.y + (2 * fac)]
+        );
+        mouth.addChild(topMouth);
+        return mouth;
     }
 }
 
@@ -182,7 +235,9 @@ module.exports = {
                     (j * (h/numRows) + (h/numRows/2)),
                     80
                 );
+                break;
             }
+            break;
         }
     }
 }
