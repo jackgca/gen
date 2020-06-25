@@ -8,3 +8,17 @@ function saveSVG(xml, cb) {
         cb();
     });
 }
+
+function createPoint(point, color) {
+    new Path.Rectangle({
+        from: [point.x, point.y],
+        to: [point.x+0.5, point.y+0.5],
+        strokeColor: color || 'black'
+    });
+}
+
+function loadSketch(sketch) {
+    const s = require('../sketches/' + sketch + '.js');
+    s.run();
+    return 'Ran sketch: ' + sketch;
+}
