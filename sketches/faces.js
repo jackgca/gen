@@ -6,52 +6,24 @@ class Eye {
 
     generateEye() {
         let radius = random(8, 12);
-        let tilt = random(-6, 6);
-        let leftSide = new Point(this.x - radius, this.y - tilt);
-        let rightSide = new Point(this.x + radius, this.y + tilt);
+        let leftSide = new Point(this.x - radius, this.y);
+        let rightSide = new Point(this.x + radius, this.y);
         let mid = new Point((rightSide.x + leftSide.x) / 2, (rightSide.y + leftSide.y) / 2);
-        let slope = (rightSide.y - leftSide.y) / (rightSide.x - leftSide.x);
-        let oppSlope = Math.PI - slope;
-        let topSize = random(4, 10);
-        let p1 = new Point(mid.x + (topSize * math.cos(oppSlope)), mid.y + (topSize * math.sin(oppSlope)));
-        let botSize = -random(4, 10);
-        let p2 = new Point(mid.x + (botSize * math.cos(oppSlope)), mid.y + (botSize * math.sin(oppSlope)));
-        
-        // draw outlines
-        let eyeTop = new Path.Arc({
-            from: leftSide,
-            through: p1,
-            to: rightSide,
-            strokeColor: 'black'
-        });
-        let eyeBot = new Path.Arc({
-            from: leftSide,
-            through: p2,
-            to: rightSide,
-            strokeColor: 'black'
+        let eyeOutline = new Path();
+        eyeOutline.moveTo(leftSide);
+        eyeOutline.cubicCurveTo([leftSide.x + (radius / 2), leftSide.y - (radius / 1.5)], [rightSide.x - (radius / 2), rightSide.y - (radius / 1.5)], rightSide);
+        eyeOutline.cubicCurveTo([rightSide.x + (radius / 2), rightSide.y + (radius / 1.5)], [leftSide.x - (radius / 2), leftSide.y + (radius / 1.5)], leftSide);
+        eyeOutline.strokeColor = 'black';
+        eyeOutline.closed = true;
+
+        let pupilSize = random(0.2, 0.35) * eyeOutline.bounds.width;
+        let pupilRect = new Path.Rectangle({
+            from: [eyeOutline.bounds.x + pupilSize, eyeOutline.bounds.y],
+            to: [eyeOutline.bounds.x + eyeOutline.bounds.width - pupilSize, eyeOutline.bounds.y + eyeOutline.bounds.height]
         });
 
-        // draw pupils
-        let pupilSize = random(0.15, 0.35) * eyeTop.length;
-
-        let corners = [
-            eyeTop.getPointAt(pupilSize),
-            eyeTop.getPointAt(eyeTop.length - pupilSize),
-            eyeBot.getPointAt(eyeBot.length - pupilSize),
-            eyeBot.getPointAt(pupilSize)
-        ];
-
-        let paths = [
-            new Path([corners[0], corners[1]]),
-            new Path.Arc(corners[1], p1, corners[2]),
-            new Path([corners[2], corners[3]]),
-            new Path.Arc(corners[3], p2, corners[0])
-        ];
-
-        
-        new CompoundPath({
-            children: paths, fillColor: 'black'
-        });
+        let intersected = eyeOutline.intersect(pupilRect);
+        intersected.fillColor = 'black';
         
     }
 }

@@ -2,7 +2,7 @@
 
 const mjsFuncs = ["sqrt", "random", "square", "floor", "ceil", "abs"];
 const {create, all} = require('mathjs');
-const mathConfig = {};
+const mathConfig = {randomSeed: 4};
 const math = create(all, mathConfig);
 
 mjsFuncs.forEach(f => {window[f] = math[f]});
