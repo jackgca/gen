@@ -84,7 +84,7 @@ for (var i = 0; i < numLines; i++) {
 }
 
 function lerpLines() {
-    let numLerps = 80;
+    let numLerps = 100;
     for (var l = 0; l < numLerps; l++) {
         let lerpXs = [0];
         let lerpYs = [220];
@@ -106,8 +106,9 @@ function lerpLines() {
             if (lerpYs[i] > maxY) {maxY = lerpYs[i];}
         }
 
-        let adj = (numLerps / 2) - Math.abs(l % numLerps - (numLerps / 2)) / 40;
-        let dist = (maxY - minY) * 0.2;
+        let adj = (numLerps / 2) - Math.abs(l % numLerps - (numLerps / 2));
+        console.log((adj / (numLerps / 4)));
+        let dist = (maxY - minY) * 0.010 * adj;
         let newMin = minY + dist;
         let newMax = maxY - dist;
 
