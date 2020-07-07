@@ -39,18 +39,18 @@ let toplastx = topxs[topxs.length - 1];
 
 let toppath = r.path().moveTo(0, topspline.at(0)).fill('none');
 
-for (var i = 0; i < numLines; i++) {
-    let x = map(
-        i,
-        0,
-        numLines,
-        topxs[0],
-        toplastx
-    );
-    let y = topspline.at(x);
-    toppath.lineTo(x, y);
-    toppath.moveTo(x, y);
-}
+// for (var i = 0; i < numLines; i++) {
+//     let x = map(
+//         i,
+//         0,
+//         numLines,
+//         topxs[0],
+//         toplastx
+//     );
+//     let y = topspline.at(x);
+//     toppath.lineTo(x, y);
+//     toppath.moveTo(x, y);
+// }
 
 // draw bottom wave
 let botxs = [0];
@@ -70,28 +70,29 @@ let botlastx = botxs[botxs.length - 1];
 
 let botpath = r.path().moveTo(0, botspline.at(0)).fill('none');
 
-for (var i = 0; i < numLines; i++) {
-    let x = map(
-        i,
-        0,
-        numLines,
-        botxs[0],
-        botlastx
-    );
-    let y = botspline.at(x);
-    botpath.lineTo(x, y);
-    botpath.moveTo(x, y);
-}
+// for (var i = 0; i < numLines; i++) {
+//     let x = map(
+//         i,
+//         0,
+//         numLines,
+//         botxs[0],
+//         botlastx
+//     );
+//     let y = botspline.at(x);
+//     botpath.lineTo(x, y);
+//     botpath.moveTo(x, y);
+// }
 
-function lerpLines() {
-    let numLerps = 80;
+function lerpLines(offset) {
+    let numLerps = 60;
     for (var l = 0; l < numLerps; l++) {
         let lerpXs = [0];
         let lerpYs = [220];
         
         for (var i = 1; i < count; i++) {
             let fac = 0;
-            //let fac = noise.get(i + l) - (0.5 * 10);
+            fac = (noise.get(i + l) - 0.5) * 0;
+
             lerpXs.push(i / count * w + fac);
             let y = map(l, 0, numLerps, topys[i], botys[i]);
             lerpYs.push(y);
@@ -107,7 +108,7 @@ function lerpLines() {
         }
 
         let adj = (numLerps / 2) - Math.abs(l % numLerps - (numLerps / 2)) / 40;
-        let dist = (maxY - minY) + adj;
+        let dist = (maxY - minY) + (adj / 2);
         let newMin = minY + dist;
         let newMax = maxY - dist;
 
