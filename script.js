@@ -99,6 +99,23 @@ function lerpLines() {
         lerpXs.push(w);
         lerpYs.push(220);
 
+        let minY = 100000;
+        let maxY = 0;
+        for (var i = 0; i < lerpYs.length; i++) {
+            if (lerpYs[i] < minY) {minY = lerpYs[i];}
+            if (lerpYs[i] > maxY) {maxY = lerpYs[i];}
+        }
+
+        let adj = (numLerps / 2) - Math.abs(l % numLerps - (numLerps / 2)) / 40;
+        let dist = (maxY - minY) * 0.2;
+        let newMin = minY + dist;
+        let newMax = maxY - dist;
+
+        for (var i = 0; i < lerpYs.length; i++) {
+            //console.log(lerpYs[i], minY, maxY, newMin, newMin);
+            lerpYs[i] = map(lerpYs[i], minY, maxY, newMin, newMax)
+        }
+
         let lerpspline = new Spline(lerpXs, lerpYs);
         let lerppath = r.path().moveTo(0, lerpspline.at(0)).fill('none');
 
