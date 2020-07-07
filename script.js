@@ -26,7 +26,7 @@ let topxs = [0];
 let topys = [220]
 
 for (var i = 1; i < count; i++) {
-    let y = 100 + (noise.get(i / count * w) * 100);
+    let y = 100 + (noise.get(i / count * w) * 200);
     topxs.push(i / count * w);
     let yadj = (count / 2) - Math.abs(i % count - (count / 2));
     topys.push(y - (yadj * yadj / 2));
@@ -57,10 +57,10 @@ let botxs = [0];
 let botys = [220]
 
 for (var i = 1; i < count; i++) {
-    let y = 220 + (noise.get(w + i / count * w) * 100);
+    let y = 220 + (noise.get(w + i / count * w) * 20);
     botxs.push(i / count * w);
     let yadj = (count / 2) - Math.abs(i % count - (count / 2));
-    botys.push(y + (yadj * yadj / 4));
+    botys.push(y + (yadj * yadj / 12));
 }
 botxs.push(w);
 botys.push(220);
@@ -70,22 +70,24 @@ let botlastx = botxs[botxs.length - 1];
 
 let botpath = r.path().moveTo(0, botspline.at(0)).fill('none');
 
-for (var i = 0; i < numLines; i++) {
-    let x = map(
-        i,
-        0,
-        numLines,
-        botxs[0],
-        botlastx
-    );
-    let y = botspline.at(x);
-    botpath.lineTo(x, y);
-    botpath.moveTo(x, y);
-}
+// for (var i = 0; i < numLines; i++) {
+//     let x = map(
+//         i,
+//         0,
+//         numLines,
+//         botxs[0],
+//         botlastx
+//     );
+//     let y = botspline.at(x);
+//     botpath.lineTo(x, y);
+//     botpath.moveTo(x, y);
+// }
 
 function lerpLines() {
-    let numLerps = 100;
+    let numLerps = 50;
+    let bum = 0;
     for (var l = 0; l < numLerps; l++) {
+        bum = bum + Rune.random(-1, 1);
         let lerpXs = [0];
         let lerpYs = [220];
         
@@ -107,14 +109,20 @@ function lerpLines() {
         }
 
         let adj = (numLerps / 2) - Math.abs(l % numLerps - (numLerps / 2));
-        console.log((adj / (numLerps / 4)));
-        let dist = (maxY - minY) * 0.010 * adj;
+        let dist = (maxY - minY) * 0.2;
         let newMin = minY + dist;
         let newMax = maxY - dist;
 
         for (var i = 0; i < lerpYs.length; i++) {
             //console.log(lerpYs[i], minY, maxY, newMin, newMin);
-            lerpYs[i] = map(lerpYs[i], minY, maxY, newMin, newMax)
+            //lerpYs[i] = map(lerpYs[i], minY, maxY, newMin, newMax)
+        }
+
+        let adjust = Rune.random(-10, 10) / 20;
+        for (var i = 0; i < lerpXs.length; i++) {
+            let factor = (numLerps / 2) - Math.abs(l % numLerps - (numLerps / 2));
+            factor = (factor * (factor * 0.5)) / 10;
+            lerpXs[i] = map(lerpXs[i], 0, w, 0 - (factor * 2), w + (factor * 2) + (bum * 2));
         }
 
         let lerpspline = new Spline(lerpXs, lerpYs);
