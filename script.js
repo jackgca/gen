@@ -107,7 +107,7 @@ function lerpLines() {
         }
 
         let adj = (numLerps / 2) - Math.abs(l % numLerps - (numLerps / 2)) / 40;
-        let dist = (maxY - minY) * 0.2;
+        let dist = (maxY - minY) + adj;
         let newMin = minY + dist;
         let newMax = maxY - dist;
 
