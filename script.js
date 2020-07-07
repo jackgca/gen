@@ -130,7 +130,6 @@ function lerpLines(offset) {
             );
             let y = lerpspline.at(x);
             lerppath.lineTo(x, y);
-            lerppath.moveTo(x, y);
         }
     }
 }
