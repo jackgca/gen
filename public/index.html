@@ -3,19 +3,17 @@
   <head>
     <meta charset="UTF-8">
     <title>Urban Ink</title>
-    <script type="text/javascript" src="../node_modules/paper/dist/paper-full.js"></script>
-    <script type="text/javascript" src="../lib/perlin.js"></script>
-    <script type="text/javascript" src="../utils.js"></script>
-    <script type="text/javascript" src="../script.js"></script>
+    <script type="text/javascript" src="../lib/rune.js"></script>
+    <script type="text/javascript" src="../lib/rune.noise.js"></script>
     <style> 
-        body {padding: 0; margin: 0; background: #000000; overflow-x:hidden; overflow-y: hidden}
-        canvas{background: #ffffff;} 
+        body {padding: 0; margin: 0; background: #ffffff; overflow-x:hidden; overflow-y: hidden}
+        svg {background: #E4D3B7;}
     </style>
   </head>
   <body>
-    <canvas id="canvas" width="594px" height="420px"></canvas>
     <script>
       require('../renderer.js');
     </script>
+    <script type="text/javascript" src="../script.js"></script>
   </body>
 </html>

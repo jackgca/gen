@@ -209,16 +209,15 @@ class Mouth {
         });
         let midPoint = noseLine.getPointAt(noseLine.length / 2);
         let topMouth = new Path({
-            segments: midPoint,
-            strokeColor: 'black'
+            segments: [midPoint.x, midPoint.y],
+            fillColor: 'blue'
         });
         let fac = random(-5, 5);
-        console.log(midPoint.x, midPoint.y);
-        console.log(fac);
         topMouth.arcTo(
             [midPoint.x + fac, midPoint.y + fac],
             [midPoint.x + (2 * fac), midPoint.y + (2 * fac)]
         );
+        topMouth.fillColor = 'red'
         mouth.addChild(topMouth);
         return mouth;
     }

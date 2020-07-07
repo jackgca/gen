@@ -4,9 +4,11 @@
   "description": "",
   "main": "main.js",
   "dependencies": {
+    "cubic-spline": "^3.0.3",
     "electron": "^9.0.5",
     "mathjs": "^7.0.2",
-    "paper": "^0.12.11"
+    "paper": "^0.12.11",
+    "rune.js": "^1.1.8"
   },
   "devDependencies": {},
   "scripts": {
